@@ -25,7 +25,8 @@ add_library( ${PROJECT_NAME} STATIC ${PRIVATE_HEADERS} ${PRIVATE_SOURCES} ${HEAD
 target_compile_features(${PROJECT_NAME} PUBLIC c_std_11)
 
 if(MSVC)
-    target_compile_options(${PROJECT_NAME} PUBLIC /W4 /WX)
+    target_compile_options(${PROJECT_NAME} PUBLIC /W3 /WX)
+    target_compile_options( ${PROJECT_NAME} PUBLIC /fsanitize=address)
 else()
     target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -Wpedantic -Werror)
 
