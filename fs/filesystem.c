@@ -5,10 +5,9 @@
     #include <string.h>
 #endif
 
-filesystem _filesystem_newfull(const char* dir, const allocator* allocator)
+filesystem _filesystem_new(const char* dir, const allocator* allocator)
 {
     return (filesystem){
-        .allocator = allocator,
         .handle = (uintptr_t)opendir(dir),
         .wd = path_litfull(dir, allocator)};
 }
