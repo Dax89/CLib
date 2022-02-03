@@ -33,6 +33,9 @@
 
 #if defined(__GNUC__) || defined(__GNUG__)
     #define clib_compiler_gnu
+#elif defined(_MSC_VER)
+    #pragma warning(disable: 5105)
+    #define clib_compiler_msvc
 #elif defined(__clang__)
     #define clib_compiler_clang
 #elif defined(__MINGW32__)
@@ -41,8 +44,6 @@
 #elif defined(__MINGW64__)
     #define clib_compiler_mingw
     #define clib_compiler_mingw64
-#elif defined(_MSC_VER)
-    #define clib_compiler_msvc
 #else
     static_assert(false, "Unsupported compiler")
 #endif

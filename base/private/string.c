@@ -16,7 +16,7 @@ int _cstring_index(const char* s1, size_t sz1, const char* s2, size_t sz2)
 {
     if(sz1 < sz2) return -1;
 
-    for(size_t i = 0; i < sz1; i++)
+    for(int i = 0; i < (int)sz1; i++)
     {
         bool found = true;
 
@@ -49,7 +49,7 @@ int _cstring_lastindex(const char* s1, size_t sz1, const char* s2, size_t sz2)
 {
     if(sz1 < sz2) return -1;
 
-    for(int i = sz1; i-- > 0; )
+    for(int i = (int)sz1; i-- > 0; )
     {
         bool found = true;
 

@@ -16,7 +16,7 @@ static size_t _file_write(file* f, const char* s, size_t size)
 
 static size_t file_getsize(FILE* f)
 {
-    size_t oldpos = ftell(f), size = 0;
+    long oldpos = ftell(f), size = 0;
     fseek(f, 0, SEEK_END);
 
     size = ftell(f);
@@ -57,7 +57,12 @@ file _file_opencstring(const char* filepath, size_t mode)
     else if(mode & file_mode_write) m[idx++] = 'w';
     else return file_null;
 
+#if defined(clib_platform_windows)
+    FILE* fp;
+    if(fopen_s(&fp, filepath, (const char*)&m)) return file_null;
+#else
     FILE* fp = fopen(filepath, (const char*)&m);
+#endif
 
     return (file) {
         .handle = (uintptr_t)fp,

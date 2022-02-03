@@ -6,8 +6,8 @@ stringview _stringview_new(const char* cstr) { return cstr ? stringview_newsize(
 
 stringview stringview_slice(stringview sv, int start, int end)
 {
-    if(start < 0) start += sv.size + 1;
-    if(end < 0) end += sv.size + 1;
+    if(start < 0) start += (int)sv.size + 1;
+    if(end < 0) end += (int)sv.size + 1;
 
     if((start < 0) || (start > (int)sv.size) || (end < start) || (end < 0) || (end > (int)sv.size))
         return stringview_null;

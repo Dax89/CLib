@@ -3,6 +3,7 @@
 #if defined(clib_platform_windows)
     #include <errno.h>
     #include <direct.h>
+    #include <windows.h>
 #elif defined(clib_platform_posix)
     #include <errno.h>
     #include <sys/types.h>
@@ -47,16 +48,27 @@ static bool _filesystem_mkpath(const char* dir)
 
 filesystem _filesystem_new(const char* dir, const allocator* allocator)
 {
-    return (filesystem){
+    filesystem fs = {
+#if defined(clib_platform_posix)
         .handle = (uintptr_t)opendir(dir),
-        .wd = path_litfull(dir, allocator)};
+#elif defined(clib_platform_windows)
+        .handle = 0,
+#endif
+        .wd = path_litfull(dir, allocator)
+    };
+
+    return fs;
 }
 
 void _filesystem_delete(filesystem* fs)
 {
     if(!fs || !fs->handle) return;
 
+#if defined(clib_platform_posix)
     closedir((DIR*)fs->handle);
+#elif defined(clib_platform_windows)
+    if(fs->handle) FindClose((HANDLE)fs->handle);
+#endif
     path_delete(&fs->it);
     path_delete(&fs->wd);
     fs->handle = 0;
@@ -64,6 +76,7 @@ void _filesystem_delete(filesystem* fs)
 
 bool _filesystem_next(filesystem* fs)
 {
+#if defined(clib_platform_posix)
     DIR* dir = (DIR*)fs->handle;
     struct dirent* dp = NULL;
 
@@ -80,6 +93,34 @@ bool _filesystem_next(filesystem* fs)
         path_clear(&fs->it);
 
     return dp;
+#elif defined(clib_platform_windows)
+    WIN32_FIND_DATA finddata;
+
+    if(fs->handle && !FindNextFileA((HANDLE)fs->handle, &finddata))
+    {
+        path_clear(&fs->it);
+        return false;
+    }
+    else if(!fs->handle)
+    {
+        path initpath = path_dup(fs->wd);
+
+        defer(path_delete(&initpath))
+        {
+            path_append(&initpath, "*");
+            fs->handle = (uintptr_t)FindFirstFileA(path_ptr(initpath), &finddata);
+        }
+    }
+
+    if(fs->handle)
+    {
+        if(path_isnull(fs->it)) fs->it = path_dup(fs->wd);
+        else path_copy(&fs->it, fs->wd);
+        path_append(&fs->it, finddata.cFileName);
+    }
+
+    return fs->handle;
+#endif
 }
 
 bool _filesystem_mkdircstring(const char* cstr) { return _filesystem_mkdir(cstr); }

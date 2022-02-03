@@ -39,7 +39,7 @@ string readfull(const allocator* a)
     while((ch = fgetc(stdin)) != EOF)
     {
         if(ch == '\n') break;
-        string_append(&s, ch);
+        string_append(&s, (char)ch);
     }
 
     return s;

@@ -95,7 +95,7 @@ void string_reverse(string* s);
 void string_delete(string* s);
 
 static inline string string_newsize(size_t size) { return string_newfull(size, default_allocator); }
-static inline string string_new() { return string_newsize(0); }
+static inline string string_new() { return string_newsize(string_defaultcapacity); }
 static inline string string_lit(const char* s) { return string_litfull(s, default_allocator); }
 static inline string string_dup(string s) { return string_dupfull(s, default_allocator); }
 static inline string string_subbed(string s, int start, int end) { return string_subbedfull(s, start, end, default_allocator); }

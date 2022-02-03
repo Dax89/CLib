@@ -31,7 +31,7 @@ stringview path_path(path p)
 stringview path_name(path p)
 {
     int idx = string_lastindex(p.str, path_separator);
-    return (idx != -1) ? string_sub(p.str, idx + 1, p.str.size) : stringview_null;
+    return (idx != -1) ? string_sub(p.str, idx + 1, (int)p.str.size) : stringview_null;
 }
 
 stringview path_stem(path p)
@@ -45,13 +45,13 @@ stringview path_stem(path p)
 stringview path_ext(path p)
 {
     int idx = string_lastindex(p.str, '.');
-    return (idx != -1) ? string_sub(p.str, idx, p.str.size) : stringview_null;
+    return (idx != -1) ? string_sub(p.str, idx, (int)p.str.size) : stringview_null;
 }
 
 bool path_issymlink(path p)
 {
 #if defined(clib_platform_windows)
-    DWORD attributes = GetFileAttributesA(string_ptr(p.data));
+    DWORD attributes = GetFileAttributesA(string_ptr(p.str));
     return (attributes != INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_REPARSE_POINT);
 #else
     struct stat buf;
@@ -62,7 +62,7 @@ bool path_issymlink(path p)
 bool path_isfile(path p)
 {
 #if defined(clib_platform_windows)
-    DWORD attributes = GetFileAttributesA(string_ptr(p.data));
+    DWORD attributes = GetFileAttributesA(string_ptr(p.str));
     return (attributes != INVALID_FILE_ATTRIBUTES) && !(attributes & FILE_ATTRIBUTE_DIRECTORY);
 #else
     struct stat buf;
@@ -73,7 +73,7 @@ bool path_isfile(path p)
 bool path_isdir(path p)
 {
 #if defined(clib_platform_windows)
-    DWORD attributes = GetFileAttributesA(string_ptr(p.data));
+    DWORD attributes = GetFileAttributesA(string_ptr(p.str));
     return (attributes != INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_DIRECTORY);
 #else
     struct stat buf;

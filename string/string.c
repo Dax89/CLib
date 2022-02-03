@@ -112,7 +112,11 @@ void _string_copycstring(string* s, const char* from, size_t size)
     if(size < sz) sz = size;
 
     _string_checkcapacity(s, sz);
+#if defined(clib_platform_windows)
+    strncpy_s(s->data, s->capacity, from, sz);
+#else
     strncpy(s->data, from, sz);
+#endif
     s->size = sz;
     s->data[s->size] = '\0';
 }
@@ -150,7 +154,7 @@ string string_dupfull(string s, const allocator* a)
 
 void string_reverse(string* s)
 {
-    for(int i = 0, j = s->size - 1; i < j; i++, j--)
+    for(int i = 0, j = (int)s->size - 1; i < j; i++, j--)
     {
         char c = s->data[i];
         s->data[i] = s->data[j];
@@ -167,8 +171,8 @@ string string_reversedfull(string s, const allocator* a)
 
 string string_subbedfull(string s, int start, int end, const allocator* a)
 {
-    if(start < 0) start += s.size + 1;
-    if(end < 0) end += s.size + 1;
+    if(start < 0) start += (int)s.size + 1;
+    if(end < 0) end += (int)s.size + 1;
 
     if((start < 0) || (start > (int)s.size) || (end < start) || (end < 0) || (end > (int)s.size))
         return string_null;
@@ -183,8 +187,8 @@ stringview string_view(string s) { return stringview_newsize(s.data, s.size); }
 
 stringview string_sub(string s, int start, int end)
 {
-    if(start < 0) start += s.size + 1;
-    if(end < 0) end += s.size + 1;
+    if(start < 0) start += (int)s.size + 1;
+    if(end < 0) end += (int)s.size + 1;
     if(end > (int)s.size) end = (int)s.size;
 
     if((start < 0) || (start > (int)s.size) || (end < start) || (end < 0))
