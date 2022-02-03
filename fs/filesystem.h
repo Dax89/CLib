@@ -12,6 +12,20 @@
 
 #define filesystem_foreach(iter, dir) filesystem_foreachfull(iter, dir, default_allocator)
 
+#define filesystem_mkdir(dir) \
+    _Generic((dir), \
+             char*: _filesystem_mkdircstring, \
+             const char*: _filesystem_mkdircstring, \
+             string: _filesystem_mkdirstring, \
+             path: _filesystem_mkdirpath)(dir)
+
+#define filesystem_mkpath(dir) \
+    _Generic((dir), \
+             char*: _filesystem_mkpathcstring, \
+             const char*: _filesystem_mkpathcstring, \
+             string: _filesystem_mkpathstring, \
+             path: _filesystem_mkpathpath)(dir)
+
 typedef struct filesystem {
    uintptr_t handle;
    path wd;
@@ -21,3 +35,10 @@ typedef struct filesystem {
 filesystem _filesystem_new(const char* dir, const allocator* a);
 void _filesystem_delete(filesystem* fs);
 bool _filesystem_next(filesystem* fs);
+
+bool _filesystem_mkdircstring(const char* cstr);
+bool _filesystem_mkdirstring(string s);
+bool _filesystem_mkdirpath(path p);
+bool _filesystem_mkpathcstring(const char* cstr);
+bool _filesystem_mkpathstring(string s);
+bool _filesystem_mkpathpath(path p);
