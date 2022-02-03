@@ -31,10 +31,10 @@ void println(const char* fmt, ...)
         _print(fmt, true, args);
 }
 
-string read()
+string readfull(const allocator* a)
 {
     int ch = 0;
-    string s = string_newsize(string_defaultcapacity);
+    string s = string_newfull(string_defaultcapacity, a);
 
     while((ch = fgetc(stdin)) != EOF)
     {

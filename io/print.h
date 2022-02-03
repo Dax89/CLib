@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../base/common.h"
-
-struct string;
+#include "../base/allocator.h"
+#include "../string/string.h"
 
 void print(const char* restrict fmt, ...);
 void println(const char* restrict fmt, ...);
-struct string read();
+string readfull(const allocator* a);
+
+static inline string read() { return readfull(default_allocator); }
