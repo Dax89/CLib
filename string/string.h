@@ -3,6 +3,10 @@
 #include "../base/allocator.h"
 #include "stringview.h"
 
+#if !defined(string_defaultcapacity)
+    #define string_defaultcapacity 32
+#endif
+
 #define string_null (string){.data = NULL, .capacity = 0, .size = 0}
 
 #define string_copy(s, from, size) \
