@@ -74,10 +74,12 @@ bool _cstring_endswith(const char* s1, size_t sz1, const char* s2, size_t sz2) {
 
 bool _cstring_splitnext(const char** s1, size_t* sz1, const char* s2, size_t sz2, char sep)
 {
-    const char *endp = s2 + sz2, *p = *s1 ? (*s1 + *sz1 + 1) : s2, *startp = p;
+    const char *endp = s2 + sz2, *p = *s1 ? (*s1 + *sz1 + 1) : s2;
     if(p >= endp) return false;
 
+    const char* startp = p;
     while((p < endp) && (*p != sep)) p++;
+
     *s1 = startp;
     *sz1 = (p - startp);
     return true;
