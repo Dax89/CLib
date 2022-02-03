@@ -209,3 +209,4 @@ bool _string_endswithchar(string s, char ch) { return _cstring_endswithchar(s.da
 bool _string_endswithcstring(string s, const char* cstr) { return _cstring_endswith(s.data, s.size, cstr, strlen(cstr)); }
 bool _string_endswithstring(string s, string str) { return _cstring_endswith(s.data, s.size, str.data, str.size); }
 bool _string_endswithstringview(string s, stringview sv) { return _cstring_endswith(s.data, s.size, sv.data, sv.size); }
+bool _string_splitnext(stringview* sv, string s, char sep) { return _cstring_splitnext(&sv->data, &sv->size, s.data, s.size, sep); }

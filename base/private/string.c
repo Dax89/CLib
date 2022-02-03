@@ -71,3 +71,14 @@ bool _cstring_startswithchar(const char* s1, size_t sz, char ch) { return sz && 
 bool _cstring_startswith(const char* s1, size_t sz1, const char* s2, size_t sz2) { return (sz1 > sz2) && !strncmp(s1, s2, sz2); }
 bool _cstring_endswithchar(const char* s1, size_t sz, char ch) { return sz && (s1[sz - 1] == ch); }
 bool _cstring_endswith(const char* s1, size_t sz1, const char* s2, size_t sz2) { return (sz1 > sz2) && !strcmp(s1 + sz1 - sz2, s2); }
+
+bool _cstring_splitnext(const char** s1, size_t* sz1, const char* s2, size_t sz2, char sep)
+{
+    const char *endp = s2 + sz2, *p = *s1 ? (*s1 + *sz1 + 1) : s2, *startp = p;
+    if(p >= endp) return false;
+
+    while((p < endp) && (*p != sep)) p++;
+    *s1 = startp;
+    *sz1 = (p - startp);
+    return true;
+}

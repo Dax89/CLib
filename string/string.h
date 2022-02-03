@@ -60,6 +60,13 @@
         char: _string_lastindexchar, \
         int: _string_lastindexchar)((s), (arg))
 
+
+#define string_spliteach(sv, s, sep) \
+    sv = stringview_null; \
+    for(bool _gensym(ok) = _string_splitnext(&sv, s, sep); \
+        _gensym(ok); \
+        _gensym(ok) = _string_splitnext(&sv, s, sep))
+
 #define string_foreach(c, s) \
     if(!string_isempty((s))) c = (s).data[0]; \
     for(size_t _gensym(i) = 0; \
@@ -101,6 +108,7 @@ static inline char string_at(string s, size_t pos) { return s.data && pos < s.si
 static inline bool string_isempty(string s) { return !s.data || !s.size; }
 static inline bool string_isnull(string s) { return !s.data; }
 
+bool _string_splitnext(stringview* sv, string s, char sep);
 bool _string_startswithchar(string s, char ch);
 bool _string_startswithcstring(string s, const char* cstr);
 bool _string_startswithstring(string s, string str);
