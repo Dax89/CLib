@@ -30,3 +30,17 @@ void println(const char* fmt, ...)
     scope(va_start(args, fmt), va_end(args))
         _print(fmt, true, args);
 }
+
+string read()
+{
+    int ch = 0;
+    string s = string_newsize(string_defaultcapacity);
+
+    while((ch = fgetc(stdin)) != EOF)
+    {
+        if(ch == '\n') break;
+        string_append(&s, ch);
+    }
+
+    return s;
+}
