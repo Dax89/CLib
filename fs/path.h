@@ -37,12 +37,15 @@
              stringview: _path_concatstringview, \
              path: _path_concatpath)((p), (arg))
 
+#define path_foreach(iter, p) string_spliteach(iter, p.str, path_separator)
+
 typedef struct path {
     string str;
 } path;
 
 path path_litfull(const char* s, const allocator* a);
-path path_newfull(string s, const allocator* a);
+path path_fromstringfull(string s, const allocator* a);
+path path_newfull(const allocator* a);
 stringview path_path(path p);
 stringview path_name(path p);
 stringview path_stem(path p);
@@ -53,10 +56,12 @@ bool path_isdir(path p);
 void path_delete(path* path);
 
 static inline path path_lit(const char* s) { return path_litfull(s, default_allocator); }
-static inline path path_new(string s) { return path_newfull(s, default_allocator); }
+static inline path path_fromstring(string s) { return path_fromstringfull(s, default_allocator); }
+static inline path path_new() { return path_newfull(default_allocator); }
 static inline path path_dup(path p) { return (path){.str = string_dup(p.str)}; }
 static inline path path_dupfull(path p, const allocator* a) { return (path){.str = string_dupfull(p.str, a)}; }
 static inline stringview path_stringview(path p) { return string_view(p.str); }
+static inline const char* path_ptr(path p) { return string_ptr(p.str); }
 static inline bool path_isnull(path p) { return string_isnull(p.str); }
 static inline bool path_isempty(path p) { return string_isempty(p.str); }
 static inline void path_clear(path* p) { string_clear(p->str); }

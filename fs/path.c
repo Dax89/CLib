@@ -2,11 +2,13 @@
 #include <string.h>
 
 #if defined(clib_platform_windows)
+    #define _path_root "\\"
     #if !defined(WIN32_LEAN_AND_MEAN)
         #define WIN32_LEAN_AND_MEAN
     #endif
     #include <windows.h>
 #elif defined(clib_platform_posix)
+    #define _path_root "/"
     #include <sys/types.h>
     #include <sys/stat.h>
     #include <unistd.h>
@@ -14,8 +16,10 @@
     static_assert(false, "path is not supported");
 #endif
 
-path path_litfull(const char* s, const allocator* a) { return s ? (path) {.str = string_litfull(s, a)} : path_null; }
-path path_newfull(string s, const allocator* a) { return (path) {.str = string_dupfull(s, a)}; }
+path path_litfull(const char* s, const allocator* a) { return s ? (path){.str = string_litfull(s, a)} : path_null; }
+path path_fromstringfull(string s, const allocator* a) { return (path){.str = string_dupfull(s, a)}; }
+path path_newfull(const allocator* a) { return (path){.str = string_litfull(_path_root, a)}; }
+
 void path_delete(path* path) { if(path) string_delete(&path->str); }
 
 stringview path_path(path p)
