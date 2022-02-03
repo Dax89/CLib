@@ -26,7 +26,10 @@ target_compile_features(${PROJECT_NAME} PUBLIC c_std_11)
 
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PUBLIC /W3 /WX)
-    target_compile_options( ${PROJECT_NAME} PUBLIC /fsanitize=address)
+
+    if(CLIB_ENABLE_ASAN)
+        target_compile_options( ${PROJECT_NAME} PUBLIC /fsanitize=address)
+    endif()
 else()
     target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -Wpedantic -Werror)
 
