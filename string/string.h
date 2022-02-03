@@ -61,11 +61,12 @@
         int: _string_lastindexchar)((s), (arg))
 
 
-#define string_spliteach(sv, s, sep) \
-    sv = stringview_null; \
-    for(bool _gensym(ok) = _string_splitnext(&sv, s, sep); \
+#define string_spliteach(iter, s, sep) \
+    iter = stringview_null; \
+    for(bool _gensym(ok) = _string_splitnext(&iter, s, sep); \
         _gensym(ok); \
-        _gensym(ok) = _string_splitnext(&sv, s, sep))
+        _gensym(ok) = _string_splitnext(&iter, s, sep)) \
+        if(!stringview_isempty(iter))
 
 #define string_foreach(c, s) \
     if(!string_isempty((s))) c = (s).data[0]; \
