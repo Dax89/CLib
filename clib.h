@@ -11,5 +11,5 @@
 #include "fs/filesystem.h"
 #include "fs/path.h"
 
-void clib_init();
-void clib_deinit();
+void clib_init(void);
+void clib_deinit(void);
